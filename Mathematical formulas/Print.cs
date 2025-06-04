@@ -2,95 +2,95 @@ namespace IromDomeSystem
 {
     static class Print
     {
-        public static void PrintStatus(IFlightPhase phase, double time, string status)
+        public static void PrintStatus(double x, double y, double vx, double vy, double totalVelocity, double angleRad, double time, string status, double timeAcceleration)
         {
-            /*
-            time
-            double x = phase.XPosition(time);
-            double y = phase.YPosition(time);
-
-            */
-
-            // שמירת הצבע המקורי
             var defaultColor = Console.ForegroundColor;
 
-            // כותרת
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("\n===== Missile Status =====");
-            Console.WriteLine($" ----- {status} ----- ");
+            Console.WriteLine(new string('=', 60));
+            Console.WriteLine("              === MISSILE STATUS ===              ");
+            Console.WriteLine($"           >>> Current Phase: {status} <<<");
+            Console.WriteLine(new string('=', 60));
 
-            // זמן
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("Time: ");
+            Console.Write("Elapsed Time (s): ");
             Console.ForegroundColor = defaultColor;
-            Console.WriteLine($"{time:F3} s");
+            Console.WriteLine($"{time:F3}");
 
-            // מיקום
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("Position: ");
-
+            Console.WriteLine("Position (meters):");
             Console.ForegroundColor = defaultColor;
-            double x = phase.XPosition(time);
-            double y = phase.YPosition(time);
+            Console.WriteLine($"  • X (horizontal):     {x:F3} m");
+            Console.WriteLine($"  • Y (vertical):       {y:F3} m");
+            Console.WriteLine($"  • Height from ground: {Math.Max(y, 0):F3} m");
 
-            Console.WriteLine($"X = {x:F3} m, Y = {y:F3} m");
-            Console.WriteLine($"Height from ground: {Math.Max(y, 0):F3} m");
-
-            // מהירות
             Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write("Velocity: ");
+            Console.WriteLine("Velocity (m/s):");
             Console.ForegroundColor = defaultColor;
-            double vx = phase.XVelocity(time);
-            double vy = phase.YVelocity(time);
-            double totalVelocity = phase.TotalVelocity(time);
-            Console.WriteLine($"Vx = {vx:F3} m/s, Vy = {vy:F3} m/s");
-            Console.WriteLine($"Total Velocity: {totalVelocity:F3} m/s");
+            Console.WriteLine($"  • Vx (horizontal):    {vx:F3} m/s");
+            Console.WriteLine($"  • Vy (vertical):      {vy:F3} m/s");
+            Console.WriteLine($"  • Total Velocity:     {totalVelocity:F3} m/s");
 
-            // זווית
             Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write("Angle    : ");
+            Console.Write("Launch Angle (degrees): ");
             Console.ForegroundColor = defaultColor;
-            double angleRad = phase.AngleMovement(time);
             Console.WriteLine($"{angleRad:F3}°");
 
-            // Debug Info
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("\nDebug Info:");
+            Console.WriteLine("\n--- Debug Info ---");
             Console.ForegroundColor = defaultColor;
-            Console.WriteLine($"Acceleration due to gravity: {Calculate.gravity:F3} m/s²");
+            Console.WriteLine($"  • Gravity Acceleration:   {Calculate.gravity:F3} m/s²");
+            Console.WriteLine($"  • Time Acceleration:      {timeAcceleration}");
 
-            // שורת הפרדה
             Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine("==========================\n");
-
-            // החזרת צבע מקורי
+            Console.WriteLine(new string('=', 60) + "\n");
             Console.ForegroundColor = defaultColor;
         }
 
-        public static void PrintStatus(FlightSnapshot snapshot)
+        public static void PrintStatus(double time, double impactTime)
         {
+            System.Console.WriteLine(time + " " + impactTime);
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(new string('-', 40));
+            Console.WriteLine(new string('=', 60));
 
-            if (snapshot.HasHitGround)
+            if (impactTime - time <= 0)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(" >> The missile has HIT the ground.");
-                if (snapshot.TimeSinceImpact.HasValue)
-                    Console.WriteLine($" Time since impact: {snapshot.TimeSinceImpact.Value:F2} seconds");
+                Console.WriteLine(">> STATUS: Missile has HIT the ground.");
+                Console.WriteLine($"Time since impact: {time - impactTime:F2} seconds");
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine(" >> The missile is still in the AIR.");
-                if (snapshot.TimeUntilImpact.HasValue)
-                    Console.WriteLine($" Time until impact: {snapshot.TimeUntilImpact.Value:F2} seconds");
+                Console.WriteLine(">> STATUS: Missile is still in the AIR.");
+                Console.WriteLine($"Time until impact: {impactTime - time:F2} seconds");
             }
 
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(new string('=', 40));
+            Console.WriteLine(new string('=', 60) + "\n");
             Console.ResetColor();
-            Console.WriteLine();
+        }
+
+        public static void PrintCoordinatesNicely(double latitude, double longitude)
+        {
+            string latitudeDirection = latitude >= 0 ? "North" : "South";
+            double absoluteLatitude = Math.Abs(latitude);
+
+            string longitudeDirection = longitude >= 0 ? "East" : "West";
+            double absoluteLongitude = Math.Abs(longitude);
+
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine(new string('=', 60));
+            Console.WriteLine("               === LOCATION DETAILS ===               ");
+            Console.WriteLine(new string('-', 60));
+            Console.ResetColor();
+
+            Console.WriteLine($"Latitude :  {absoluteLatitude:F6}° {latitudeDirection}");
+            Console.WriteLine($"Longitude:  {absoluteLongitude:F6}° {longitudeDirection}");
+
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine(new string('=', 60) + "\n");
+            Console.ResetColor();
         }
     }
 }

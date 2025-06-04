@@ -8,12 +8,12 @@
             //                     // מיקום X Y Z
 
             Missile missile = new Missile.Builder()
-                .SetAcceleration(50)      // More realistic acceleration
-                .SetTimeAcceleration(20)   // Shorter burn time
+                .SetAcceleration(0)      // More realistic acceleration
+                .SetTimeAcceleration(5)   // Shorter burn time
                 .SetLanunchAngle(45)      // 45-degree launch angle
                 .SetGeographicAngle(50)    // Simplified for testing
-                .SetLatitude(2.52)
-                .SetLongitude(25.5)
+                .SetLatitude(31.497642435306812)
+                .SetLongitude(34.447034780157175)
                 .Build();
                 
             // Calculate.acceleration = 50;
