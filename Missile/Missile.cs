@@ -41,6 +41,18 @@ namespace IromDomeSystem
                 missile.GeographicAngle = geographicAngle;
                 return this;
             }
+            
+            public Builder SetLongitude(double Longitude)
+            {
+                missile.Longitude = Longitude;
+                return this;
+            }
+            
+            public Builder SetLatitude(double Latitude)
+            {
+                missile.Latitude = Latitude;
+                return this;
+            }
 
 
             public Missile Build()

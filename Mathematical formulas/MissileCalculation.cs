@@ -2,13 +2,13 @@ namespace IromDomeSystem
 {
     class MissileCalculation
     {
-        public static double gravity = Calculate.gravity; // כוח המשיכה (m/s²)
-        public static double acceleration; // תאוצה
-        public static double timeAcceleration; // משך שלב התאוצה
-        public static double launchAngle; // זווית שיגור ברדיאנים
-        public static double GeographicAngle; //  זווית גיאוגרפית ברדיאנים
-        Calculate.PoweredFlight PoweredFlight;
-        Calculate.BallisticFlight BallisticFlight;
+        public  double acceleration, timeAcceleration;
+        public  double launchAngle; // זווית שיגור ברדיאנים
+        public  double GeographicAngle; //  זווית גיאוגרפית ברדיאנים
+        public double Longitude, Latitude;
+        PoweredFlight PoweredFlight;
+        BallisticFlight BallisticFlight;
+        GeographicFlightCalculation geographicFlightCalculation;
 
         public MissileCalculation(Missile missile)
         {
@@ -17,12 +17,13 @@ namespace IromDomeSystem
             acceleration = missile.Acceleration;
             timeAcceleration = missile.TimeAcceleration;
 
-            PoweredFlight = new Calculate.PoweredFlight(acceleration, launchAngle);
-            double initialPositionX = PoweredFlight.XPosition(timeAcceleration);
-            double initialPositionY = PoweredFlight.YPosition(timeAcceleration);
-            double initialVelocityX = PoweredFlight.XVelocity(timeAcceleration);
-            double initialVelocityY = PoweredFlight.YVelocity(timeAcceleration);
-            BallisticFlight = new Calculate.BallisticFlight(initialPositionX, initialPositionY, initialVelocityX, initialVelocityY);
+            PoweredFlight = new PoweredFlight(acceleration, launchAngle);
+
+            var (initialPositionX, initialPositionY, initialVelocityX, initialVelocityY) = PoweredFlight.EndPoweredFlight(timeAcceleration);
+
+            BallisticFlight = new BallisticFlight(initialPositionX, initialPositionY, initialVelocityX, initialVelocityY);
+
+            geographicFlightCalculation = new(GeographicAngle, Longitude, Latitude);
         }
 
         public void run(double time)
@@ -32,15 +33,19 @@ namespace IromDomeSystem
 
             if (time <= timeAcceleration)
             {
-                Print.PrintStatus(PoweredFlight, time, "Powered Flight");
+                double distance = PoweredFlight.XPosition(time);
+                geographicFlightCalculation.CalculatLongitudeLatitude(distance: distance);
 
+                Print.PrintStatus(PoweredFlight, time, "Powered Flight");
                 Print.PrintStatus(snapshot);
             }
             else
             {
                 double ballisticTime = time - timeAcceleration;
-                Print.PrintStatus(BallisticFlight, ballisticTime, "Ballistic Flight");
+                double distance = BallisticFlight.XPosition(ballisticTime);
+                geographicFlightCalculation.CalculatLongitudeLatitude(distance: distance);
 
+                Print.PrintStatus(BallisticFlight, ballisticTime, "Ballistic Flight");
                 Print.PrintStatus(snapshot);
 
             }

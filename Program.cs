@@ -11,7 +11,9 @@
                 .SetAcceleration(50)      // More realistic acceleration
                 .SetTimeAcceleration(20)   // Shorter burn time
                 .SetLanunchAngle(45)      // 45-degree launch angle
-                .SetGeographicAngle(0)    // Simplified for testing
+                .SetGeographicAngle(50)    // Simplified for testing
+                .SetLatitude(2.52)
+                .SetLongitude(25.5)
                 .Build();
                 
             // Calculate.acceleration = 50;

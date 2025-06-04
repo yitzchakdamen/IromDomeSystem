@@ -4,6 +4,13 @@ namespace IromDomeSystem
     {
         public static void PrintStatus(IFlightPhase phase, double time, string status)
         {
+            /*
+            time
+            double x = phase.XPosition(time);
+            double y = phase.YPosition(time);
+
+            */
+
             // שמירת הצבע המקורי
             var defaultColor = Console.ForegroundColor;
 

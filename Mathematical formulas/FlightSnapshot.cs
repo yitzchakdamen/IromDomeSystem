@@ -2,10 +2,6 @@ namespace IromDomeSystem
 {
     public class FlightSnapshot
     {
-
-        public double Y { get; set; }
-        public double Velocity { get; set; }
-        public double Angle { get; set; }
         public bool HasHitGround { get; set; }
         public double? TimeSinceImpact { get; set; }
         public double? TimeUntilImpact { get; set; }
@@ -21,7 +17,7 @@ namespace IromDomeSystem
                 }
             }
 
-            bool hasHit = impactTime - time <= 0; //phase.YPosition(time)  <= 0;
+            bool hasHit = impactTime - time <= 0; 
 
             return new FlightSnapshot
             {
