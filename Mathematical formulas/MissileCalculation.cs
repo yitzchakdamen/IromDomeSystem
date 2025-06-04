@@ -24,7 +24,7 @@ namespace IromDomeSystem
             geographicFlightCalculation = new(GeographicAngle, launchLongitude, launchLatitude);
             impactTime = (double)ImpactTime(BallisticFlight, timeAcceleration)!;
             impactdistance = BallisticFlight.XPosition(impactTime - timeAcceleration);
-        }vhh
+        }
 
         public void run(double time)
         {
