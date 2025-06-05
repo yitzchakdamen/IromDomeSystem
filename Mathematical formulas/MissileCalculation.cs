@@ -1,15 +1,15 @@
-using Microsoft.VisualBasic;
 
 namespace IromDomeSystem
 {
     class MissileCalculation
     {
-        public double acceleration, timeAcceleration, launchAngle, GeographicAngle, launchLongitude, launchLatitude, impactTime, impactdistance;
-        PoweredFlight PoweredFlight;
-        BallisticFlight BallisticFlight;
-        GeographicFlightCalculation geographicFlightCalculation;
+        double acceleration, timeAcceleration, launchAngle, GeographicAngle, launchLongitude, launchLatitude, impactTime, impactdistance, impactLongitude, impactLatitude;
+        PoweredFlight? PoweredFlight;
+        BallisticFlight? BallisticFlight;
+        GeographicFlightCalculation? geographicFlightCalculation;
+        LocationData? locationData;
 
-        public MissileCalculation(Missile missile)
+        public async Task CalculateMissile(Missile missile)
         {
             launchAngle = Calculate.DegreesToRadians(missile.LanunchAngle);
             GeographicAngle = missile.GeographicAngle;
@@ -24,40 +24,33 @@ namespace IromDomeSystem
             geographicFlightCalculation = new(GeographicAngle, launchLongitude, launchLatitude);
             impactTime = (double)ImpactTime(BallisticFlight, timeAcceleration)!;
             impactdistance = BallisticFlight.XPosition(impactTime - timeAcceleration);
+            (impactLongitude, impactLatitude) = geographicFlightCalculation.CalculatLongitudeLatitude(distance: impactdistance);
+
+            locationData = await Http.SendToServer(impactLatitude, impactLongitude);
         }
 
         public void run(double time)
         {
-            Console.Clear();
-
-            var (impactLongitude, impactLatitude) = geographicFlightCalculation.CalculatLongitudeLatitude(distance: impactdistance);
-            Console.WriteLine(impactLongitude + " " + impactLatitude);
-            Print.PrintCoordinatesNicely(impactLongitude, impactLatitude);
-            Print.PrintStatus(time, impactTime);
-
+            double x, y, vx, vy, totalVelocity, angle, Longitude, Latitude;
+            string status;
 
             if (time <= timeAcceleration)
             {
+                status = "Powered Flight";
                 double distance = PoweredFlight.XPosition(time);
-                var (Longitude, Latitude) = geographicFlightCalculation.CalculatLongitudeLatitude(distance: distance);
-
-                var (x, y, vx, vy, totalVelocity, angle) = Calculation(PoweredFlight, time);
-
-                Print.PrintStatus(x, y, vx, vy, totalVelocity, angle, time, "Powered Flight", timeAcceleration);
-                Print.PrintCoordinatesNicely(Longitude, Latitude);
+                (Longitude, Latitude) = geographicFlightCalculation.CalculatLongitudeLatitude(distance: distance);
+                (x, y, vx, vy, totalVelocity, angle) = Calculation(PoweredFlight, time);
             }
             else
             {
+                status = "Ballistic Flight";
                 double ballisticTime = time - timeAcceleration;
                 double distance = BallisticFlight.XPosition(ballisticTime);
-                var (Longitude, Latitude) = geographicFlightCalculation.CalculatLongitudeLatitude(distance: distance);
-
-                var (x, y, vx, vy, totalVelocity, angle) = Calculation(BallisticFlight, ballisticTime);
-
-                Print.PrintStatus(x, y, vx, vy, totalVelocity, angle, ballisticTime, "Ballistic Flight", timeAcceleration);
-                Print.PrintCoordinatesNicely(Longitude, Latitude);
-
+                (Longitude, Latitude) = geographicFlightCalculation.CalculatLongitudeLatitude(distance: distance);
+                (x, y, vx, vy, totalVelocity, angle) = Calculation(BallisticFlight, ballisticTime);
             }
+
+            PrintStatus(x, y, vx, vy, totalVelocity, angle, time, status, timeAcceleration, Longitude, Latitude);
         }
 
         public (double, double, double, double, double, double) Calculation(IFlightPhase phase, double time)
@@ -89,5 +82,17 @@ namespace IromDomeSystem
             }
             return impactTime;
         }
+        void PrintStatus(double x, double y, double vx, double vy, double totalVelocity, double angle, double time, string status, double timeAcceleration, double Longitude, double Latitude)
+        {
+            Console.Clear();
+            Print.PrintStatus(x, y, vx, vy, totalVelocity, angle, time, status, timeAcceleration);
+            Print.PrintStatus(time, impactTime);
+            Print.PrintCoordinatesNicely(impactLongitude, impactLatitude);
+            if (locationData != null)
+                Console.WriteLine(locationData.display_name);
+            Console.WriteLine(impactLongitude + " " + impactLatitude);
+            Print.PrintCoordinatesNicely(Longitude, Latitude);
+        }
+        
     }
 }

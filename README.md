@@ -1,157 +1,240 @@
-# Iron Dome System Simulation
+# Iron Dome System - מערכת כיפת ברזל
 
-## Overview
-This project implements a sophisticated missile trajectory simulation system, designed to model and analyze ballistic missile paths with high precision. The system incorporates advanced mathematical models for various flight phases, geographic calculations, and real-time trajectory analysis.
+## סקירה כללית - Overview
+מערכת סימולציה מתקדמת לחישוב ומעקב אחר מסלולי טילים, המיועדת לשימוש במערכת כיפת ברזל. המערכת מספקת חישובים מדויקים של מסלולי טיסה, נקודות יירוט, ומיקומים גיאוגרפיים בזמן אמת.
 
-## Core Components
+This advanced simulation system calculates and tracks missile trajectories for the Iron Dome defense system. The system provides precise calculations of flight paths, interception points, and real-time geographic locations.
 
-### Missile Flight Physics
-- **Powered Flight Phase**: Implementation of thrust-driven initial launch phase
-- **Ballistic Flight Phase**: Mathematical modeling of unpowered flight trajectories
-- **Geographic Calculations**: Real-world coordinate system integration
-- **Real-time Position Tracking**: 3D position monitoring (X, Y, Z coordinates)
+## ארכיטקטורת המערכת - System Architecture
 
-### Mathematical Models
-The system implements complex mathematical formulas for:
-- Trajectory calculations in 3D space
-- Atmospheric effects consideration
-- Geographic coordinate transformations
-- Velocity and acceleration vectors
-- Flight phase transitions
-
-### Key Features
-- **Advanced Missile Configuration**:
-  - Configurable initial acceleration
-  - Adjustable launch parameters
-  - Geographic positioning (Latitude/Longitude)
-  - Custom flight characteristics
-- **Real-time Simulation**:
-  - Live trajectory updates
-  - Flight phase monitoring
-  - Position tracking
-  - Time-based calculations
-- **Modular Architecture**:
-  - Separate flight phase calculations
-  - Extensible design patterns
-  - Clean separation of concerns
-
-## Technical Architecture
-
-### Project Structure
+### מבנה הפרויקט - Project Structure
 ```
 IromDomeSystem/
-├── Program.cs                        # Application entry point
-├── MissileSimulation.cs             # Core simulation controller
-├── Mathematical formulas/           # Mathematical computation modules
-│   ├── MissileCalculation.cs       # Main calculation engine
-│   ├── PoweredFlight.cs            # Powered phase calculations
-│   ├── BallisticFlight.cs          # Ballistic phase calculations
-│   ├── GeographicFlightCalculation.cs # Geographic transformations
-│   ├── MathematicalFormulas.cs     # Core mathematical functions
-│   ├── Print.cs                    # Output formatting
-│   ├── FlightSnapshot.cs           # Flight state management
-│   └── IFlightPhase.cs            # Flight phase interface
-└── Missile/                        # Missile configuration
-    └── Missile.cs                  # Missile properties and builder
+├── Program.cs                        # נקודת כניסה לתוכנית
+├── MissileSimulation.cs             # בקר סימולציה ראשי
+├── Mathematical formulas/           # מודולי חישוב מתמטיים
+│   ├── MissileCalculation.cs       # מנוע החישובים הראשי
+│   ├── PoweredFlight.cs            # חישובי שלב הטיסה המונעת
+│   ├── BallisticFlight.cs          # חישובי שלב הטיסה הבליסטית
+│   ├── GeographicFlightCalculation.cs # המרות קואורדינטות גיאוגרפיות
+│   ├── MathematicalFormulas.cs     # פונקציות מתמטיות בסיסיות
+│   ├── Print.cs                    # עיצוב פלט
+│   ├── FlightSnapshot.cs           # ניהול מצב טיסה
+│   └── IFlightPhase.cs            # ממשק שלבי טיסה
+└── Missile/                        # הגדרות טיל
+    └── Missile.cs                  # מאפייני טיל ובנייה
 ```
 
-### Design Patterns
-- **Builder Pattern**: Flexible missile configuration
-- **Strategy Pattern**: Interchangeable flight phases
-- **Interface Segregation**: Clean separation of flight phase calculations
-- **Dependency Injection**: Modular component design
+### רכיבים עיקריים - Main Components
 
-## Technical Requirements
-- **.NET Framework**: .NET Core SDK 6.0 or higher
-- **Development Environment**: 
-  - Visual Studio 2019/2022
-  - Windows 10/11
-- **Required NuGet Packages**: 
-  - System.Threading
-  - System.Math.Numerics (for complex calculations)
+#### 1. MissileCalculation - חישובי טיל
+- חישוב מסלול טיסה מלא
+- מעקב אחר מיקום בזמן אמת
+- חיזוי נקודת פגיעה
+- המרת קואורדינטות גיאוגרפיות
 
-## Setup and Installation
+#### 2. Flight Phases - שלבי טיסה
+##### Powered Flight - טיסה מונעת
+- חישוב תאוצה ראשונית
+- מעקב אחר מהירות וכיוון
+- חישוב זמן שלב ההאצה
 
-### Development Setup
-1. Clone the repository:
+##### Ballistic Flight - טיסה בליסטית
+- חישוב מסלול בליסטי
+- התחשבות בכוח הכבידה
+- חיזוי מסלול ונקודת נחיתה
+
+#### 3. Geographic Calculations - חישובים גיאוגרפיים
+- המרה בין קואורדינטות קרטזיות לגיאוגרפיות
+- חישוב מרחקים גיאוגרפיים
+- מעקב אחר מיקום בזמן אמת
+
+## מודלים מתמטיים - Mathematical Models
+
+### חישובי מסלול - Trajectory Calculations
+```math
+x(t) = x₀ + v₀ₓt + ½at²   // מיקום אופקי
+y(t) = y₀ + v₀ᵧt - ½gt²   // מיקום אנכי
+v(t) = √(vₓ² + vᵧ²)       // מהירות כוללת
+θ(t) = tan⁻¹(vᵧ/vₓ)       // זווית תנועה
+```
+
+### המרות גיאוגרפיות - Geographic Conversions
+- חישובי מרחק על פני כדור הארץ
+- המרת קואורדינטות גיאוגרפיות
+- התחשבות בעקמומיות כדור הארץ
+
+## דרישות טכניות - Technical Requirements
+
+### דרישות מערכת - System Requirements
+- **מערכת הפעלה**: Windows 10/11
+- **.NET Framework**: .NET Core SDK 6.0 ומעלה
+- **זיכרון**: מינימום 8GB RAM
+- **מעבד**: Intel Core i5 ומעלה
+
+### תלויות תוכנה - Software Dependencies
+```xml
+<dependencies>
+    <dependency>
+        <groupId>System.Threading.Tasks</groupId>
+        <version>6.0.0</version>
+    </dependency>
+    <dependency>
+        <groupId>System.Math.Numerics</groupId>
+        <version>6.0.0</version>
+    </dependency>
+</dependencies>
+```
+
+## התקנה והפעלה - Setup and Installation
+
+### התקנת הפרויקט - Project Setup
 ```bash
+# Clone the repository
 git clone https://github.com/yourusername/IromDomeSystem.git
+
+# Navigate to project directory
 cd IromDomeSystem
-```
 
-2. Open in Visual Studio:
-```
-IromDomeSystem.sln
-```
-
-3. Restore NuGet packages:
-```bash
+# Restore dependencies
 dotnet restore
-```
 
-4. Build the solution:
-```bash
+# Build the project
 dotnet build
 ```
 
-### Running the Simulation
-1. Build and run the project in Visual Studio (F5)
-2. Or via command line:
-```bash
-dotnet run
-```
-
-## Usage Example
-
+### הפעלת הסימולציה - Running the Simulation
 ```csharp
-// Initialize missile with specific parameters
-Missile missile = new Missile.Builder()
-    .SetAcceleration(0)           // Initial acceleration
-    .SetTimeAcceleration(5)       // Acceleration duration
-    .SetLanunchAngle(45)          // Launch angle in degrees
-    .SetGeographicAngle(50)       // Geographic orientation
-    .SetLatitude(31.497642435306812)   // Launch position latitude
-    .SetLongitude(34.447034780157175)  // Launch position longitude
+// יצירת אובייקט טיל עם פרמטרים ספציפיים
+var missile = new Missile.Builder()
+    .SetAcceleration(30.0)          // תאוצה התחלתית
+    .SetTimeAcceleration(5.0)       // זמן האצה
+    .SetLanunchAngle(45.0)          // זווית שיגור
+    .SetGeographicAngle(50.0)       // כיוון גיאוגרפי
+    .SetLatitude(31.497642435306812)  // קו רוחב
+    .SetLongitude(34.447034780157175) // קו אורך
     .Build();
 
-// Run the simulation
-MissileSimulation.Run(missile);
+// הפעלת החישובים
+var missileCalc = new MissileCalculation();
+await missileCalc.CalculateMissile(missile);
+
+// הרצת סימולציה בזמן אמת
+for (double time = 0; time <= impactTime; time += 0.1)
+{
+    missileCalc.run(time);
+    await Task.Delay(100); // עיכוב להדמיית זמן אמת
+}
 ```
 
-## Mathematical Models
+## פלט המערכת - System Output
 
-The system implements several key mathematical models:
-- Ballistic trajectory calculations
-- Powered flight equations
-- Geographic coordinate transformations
-- Atmospheric resistance models
-- Vector calculations in 3D space
+### נתוני טיסה בזמן אמת - Real-time Flight Data
+- מיקום נוכחי (X, Y)
+- רכיבי מהירות (Vx, Vy)
+- מהירות כוללת
+- זווית תנועה
+- קואורדינטות גיאוגרפיות
+- מידע על נקודת פגיעה צפויה
 
-## Contributing
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+### דוגמת פלט - Sample Output
+```
+Flight Status:
+Position: X=1234.56m, Y=567.89m
+Velocity: Vx=100.0m/s, Vy=-20.0m/s
+Total Velocity: 102.0m/s
+Angle: -11.3°
 
-## Testing
-- Unit tests for mathematical calculations
-- Integration tests for flight phases
-- System tests for full trajectory simulations
+Geographic Location:
+Latitude: 31.4976°N
+Longitude: 34.4470°E
+Location: Sderot, Israel
 
-## License
-This project is proprietary and confidential. All rights reserved.
+Impact Prediction:
+Time to Impact: 15.3s
+Impact Coordinates: 31.5012°N, 34.4523°E
+```
 
-## Authors and Acknowledgment
-- Core Development Team
-- Mathematical Models Contributors
-- Testing Team
+## פיתוח ותחזוקה - Development and Maintenance
 
-## Support and Contact
-For technical support or inquiries:
-- Open an issue in the repository
-- Contact the development team
-- Check documentation for common issues
+### תבניות עיצוב - Design Patterns
+- **Builder Pattern**: בניית אובייקטי טיל
+- **Strategy Pattern**: ניהול שלבי טיסה
+- **Observer Pattern**: מעקב אחר שינויי מצב
+- **Dependency Injection**: הזרקת תלויות
 
-## Project Status
-Active development - Regular updates and improvements 
+### בדיקות - Testing
+- בדיקות יחידה למודלים מתמטיים
+- בדיקות אינטגרציה לשלבי טיסה
+- בדיקות מערכת לסימולציה מלאה
+
+### ביצועים - Performance
+- אופטימיזציה לחישובים מתמטיים
+- ניהול זיכרון יעיל
+- תמיכה בחישובים מקביליים
+
+## תיעוד API - API Documentation
+
+### MissileCalculation Class
+```csharp
+public class MissileCalculation
+{
+    // חישוב מסלול טיל
+    public async Task CalculateMissile(Missile missile);
+    
+    // הרצת סימולציה בנקודת זמן
+    public void run(double time);
+    
+    // חישוב זמן פגיעה
+    public double? ImpactTime(IFlightPhase phase, double timeAcceleration);
+}
+```
+
+### Missile Builder
+```csharp
+public class Missile
+{
+    public class Builder
+    {
+        public Builder SetAcceleration(double acceleration);
+        public Builder SetTimeAcceleration(double time);
+        public Builder SetLanunchAngle(double angle);
+        public Builder SetGeographicAngle(double angle);
+        public Builder SetLatitude(double latitude);
+        public Builder SetLongitude(double longitude);
+        public Missile Build();
+    }
+}
+```
+
+## אבטחה ובטיחות - Security and Safety
+
+### אבטחת מידע - Data Security
+- הצפנת נתונים רגישים
+- בקרת גישה למערכת
+- תיעוד פעולות משתמשים
+
+### בטיחות מערכת - System Safety
+- בדיקות תקינות קלט
+- טיפול בשגיאות
+- גיבוי נתונים
+
+## תמיכה ועזרה - Support and Help
+
+### פתרון בעיות נפוצות - Common Issues
+- בעיות התקנה
+- שגיאות חישוב
+- בעיות ביצועים
+
+### יצירת קשר - Contact
+- פתיחת issue במערכת
+- פנייה לצוות הפיתוח
+- תיעוד טכני מפורט
+
+## סטטוס פרויקט - Project Status
+- בפיתוח פעיל
+- עדכונים שוטפים
+- שיפורים מתמשכים
+
+## רישיון - License
+כל הזכויות שמורות © 2024

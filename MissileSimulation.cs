@@ -1,19 +1,21 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace IromDomeSystem
 {
     class MissileSimulation
     {
-        public static void Run(Missile missile)
+        public static async Task Run(Missile missile)
         {
-            MissileCalculation missileCalc = new MissileCalculation(missile);
+            MissileCalculation missileCalculation = new();
+            await missileCalculation.CalculateMissile(missile);
 
             double time = 0;
 
             while (true)
             {
-                missileCalc.run(time);
+                missileCalculation.run(time);
                 Thread.Sleep(1000);
                 time ++;
             }
